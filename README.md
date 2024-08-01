@@ -73,4 +73,4 @@ OpenWeatherMap API anahtarınızı `weather.py` dosyasında `API_KEY` değişken
 
 ## Lisans
 
-Bu proje MIT Lisansı ile lisanslanmıştır. Daha fazla bilgi için `LICENSE` dosyasına bakın.
+Lisans kullanıldıysa eklenir.
