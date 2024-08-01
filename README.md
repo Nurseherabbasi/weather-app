@@ -18,11 +18,11 @@ Bu proje aşağıdaki Python paketlerine ihtiyaç duyar:
 
 1. Proje dosyalarını bilgisayarınıza indirin veya klonlayın:
 
-    git clone https://github.com/kullaniciadi/proje-adi.git
+    git clone https://github.com/Nurseherabbasi/weather-app.git
 
 2. Proje dizinine gidin:
 
-    cd proje-adi
+    cd weather-app
 
 3. Python sanal ortamı oluşturun ve etkinleştirin:
 
