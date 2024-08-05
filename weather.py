@@ -21,7 +21,7 @@ def get_weather():
     url = f'http://api.openweathermap.org/data/2.5/weather?q={location}&appid={API_KEY}&units=metric'
     try:
         response = requests.get(url)
-        response.raise_for_status()  # Raises an HTTPError if the HTTP request returned an unsuccessful status code
+        response.raise_for_status()  
         data = response.json()
 
         if 'weather' in data:
