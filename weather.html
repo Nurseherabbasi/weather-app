@@ -4,33 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Weather Application</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            background-color: #f0f8ff;
-        }
-        input, button {
-            margin: 10px;
-            padding: 10px;
-            font-size: 1em;
-        }
-        button {
-            background-color: #4682b4;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #4169e1;
-        }
-        #result {
-            margin-top: 20px;
-            font-size: 1.2em;
-            color: #333;
-        }
-    </style>
+    <link rel="stylesheet" href="/static/styles.css">
     <script>
         function getWeather() {
             const city = document.getElementById('city').value;
@@ -39,26 +13,28 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.error) {
-                        document.getElementById('result').innerHTML = data.error;
+                        document.getElementById('result').innerHTML = `<span style="color: red;">${data.error}</span>`;
                     } else {
                         document.getElementById('result').innerHTML = `
-                            Şehir: ${data.city}<br>
-                            Sıcaklık: ${data.temperature}°C<br>
-                            Açıklama: ${data.description}
+                            <strong>Şehir:</strong> ${data.city}<br>
+                            <strong>Sıcaklık:</strong> ${data.temperature}°C<br>
+                            <strong>Açıklama:</strong> ${data.description}
                         `;
                     }
                 })
                 .catch(error => {
-                    document.getElementById('result').innerHTML = 'Bir hata oluştu.';
+                    document.getElementById('result').innerHTML = '<span style="color: red;">Bir hata oluştu.</span>';
                 });
         }
     </script>
 </head>
 <body>
-    <h1>Hava Durumu Uygulaması</h1>
-    <input type="text" id="city" placeholder="Şehir adı girin">
-    <input type="text" id="country" placeholder="Ülke kodu (opsiyonel)">
-    <button onclick="getWeather()">Hava Durumunu Getir</button>
-    <div id="result"></div>
+    <div class="container">
+        <h1>Hava Durumu Uygulaması</h1>
+        <input type="text" id="city" placeholder="Şehir adı girin" autofocus>
+        <input type="text" id="country" placeholder="Ülke kodu (opsiyonel)">
+        <button onclick="getWeather()">Hava Durumunu Getir</button>
+        <div id="result"></div>
+    </div>
 </body>
 </html>
