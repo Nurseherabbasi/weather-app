@@ -12,14 +12,21 @@
             fetch(`/weather?city=${city}&country=${country}`)
                 .then(response => response.json())
                 .then(data => {
+                    const resultElement = document.getElementById('result');
+                    const weatherIcon = document.getElementById('weather-icon');
+
                     if (data.error) {
-                        document.getElementById('result').innerHTML = `<span style="color: red;">${data.error}</span>`;
+                        resultElement.innerHTML = `<span style="color: red;">${data.error}</span>`;
+                        weatherIcon.src = '';  
                     } else {
-                        document.getElementById('result').innerHTML = `
+                        resultElement.innerHTML = `
                             <strong>Şehir:</strong> ${data.city}<br>
                             <strong>Sıcaklık:</strong> ${data.temperature}°C<br>
                             <strong>Açıklama:</strong> ${data.description}
                         `;
+                        
+                        const iconCode = data.icon;  
+                        weatherIcon.src = `http://openweathermap.org/img/wn/${iconCode}.png`;
                     }
                 })
                 .catch(error => {
@@ -35,6 +42,7 @@
         <input type="text" id="country" placeholder="Ülke kodu (opsiyonel)">
         <button onclick="getWeather()">Hava Durumunu Getir</button>
         <div id="result"></div>
+        <img id="weather-icon" src="" alt="Weather Icon" style="width: 100px; height: 100px;">
     </div>
 </body>
 </html>

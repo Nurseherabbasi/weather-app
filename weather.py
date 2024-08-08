@@ -11,7 +11,7 @@ swagger = Swagger(app)
 API_KEY = '8cf09b9f1afc7c0359c1f92e1ce1a106'
 
 
-redis_client = redis.StrictRedis(host='redis', port=6379, db=0, decode_responses=True)
+redis_client = redis.Redis(host='redis', port=6379, db=0, decode_responses=True)
 
 @app.route('/')
 def index():
@@ -49,23 +49,24 @@ def get_weather():
             description:
               type: string
               description: Weather description
+            icon:
+              type: string
+              description: Weather icon code
       500:
         description: Error message
     """
     city = request.args.get('city', 'Istanbul')
-    country = request.args.get('country', '') 
-    if country:
-        location = f"{city},{country}"
-    else:
-        location = city
-
-    cache_key = f"weather:{city}:{country}"
+    country = request.args.get('country', '')
+    
+    location = f"{city},{country}" if country else city
+    cache_key = f"weather:{city}:{country}" if country else f"weather:{city}"
     
     try:
         
         cached_data = redis_client.get(cache_key)
         if cached_data:
             return jsonify(json.loads(cached_data))
+        
         
         url = f'http://api.openweathermap.org/data/2.5/weather?q={location}&appid={API_KEY}&units=metric'
         response = requests.get(url)
@@ -76,7 +77,8 @@ def get_weather():
             weather_data = {
                 'city': data['name'],
                 'temperature': data['main']['temp'],
-                'description': data['weather'][0]['description']
+                'description': data['weather'][0]['description'],
+                'icon': data['weather'][0]['icon']  
             }
             
             
@@ -85,11 +87,13 @@ def get_weather():
         else:
             return jsonify({'error': 'Beklenmeyen veri yapısı'}), 500
     except redis.RedisError as e:
-        print(f"Redis error: {str(e)}")  
+        app.logger.error(f"Redis error: {str(e)}")  
         return jsonify({'error': 'Veri cache işlemi sırasında bir hata oluştu.'}), 500
     except requests.exceptions.RequestException as e:
+        app.logger.error(f'API isteği başarısız: {str(e)}')
         return jsonify({'error': f'API isteği başarısız: {str(e)}'}), 500
     except Exception as e:
+        app.logger.error(f'Bir hata oluştu: {str(e)}')
         return jsonify({'error': f'Bir hata oluştu: {str(e)}'}), 500
 
 if __name__ == "__main__":
