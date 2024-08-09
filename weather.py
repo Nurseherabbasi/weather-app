@@ -17,6 +17,10 @@ redis_client = redis.Redis(host='redis', port=6379, db=0, decode_responses=True)
 def index():
     return render_template('weather.html')
 
+@app.route('/docs')
+def docs():
+    return render_template('docs.html')
+
 @app.route('/weather', methods=['GET'])
 def get_weather():
     """
@@ -67,7 +71,7 @@ def get_weather():
         if cached_data:
             return jsonify(json.loads(cached_data))
         
-        
+       
         url = f'http://api.openweathermap.org/data/2.5/weather?q={location}&appid={API_KEY}&units=metric'
         response = requests.get(url)
         response.raise_for_status()
@@ -81,7 +85,7 @@ def get_weather():
                 'icon': data['weather'][0]['icon']  
             }
             
-            
+           
             redis_client.setex(cache_key, timedelta(minutes=5), json.dumps(weather_data))
             return jsonify(weather_data)
         else:
